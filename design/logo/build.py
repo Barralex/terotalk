@@ -23,6 +23,7 @@ BRAND = ROOT / "assets" / "brand"
 PAGES = ["index.html", "kids/index.html", "professionals/index.html"]
 CANVAS_BOARD = ROOT / "design" / "canvas" / "project" / "Main.dc.html"
 CANVAS_HERO = ROOT / "design" / "canvas" / "project" / "Mezcla.dc.html"
+CANVAS_ABOUT = ROOT / "design" / "canvas" / "project" / "About.dc.html"
 
 VIEWBOX = "4 22 232 232"
 
@@ -52,8 +53,30 @@ LEGS = '<path d="M50 98 L48 112 M48 112 H42 M48 112 H55"/><path d="M66 98 L68 11
 SEALS = {"quality-seal.svg": "dark", "quality-seal-dark.svg": "light"}
 SEAL_BIRD = "translate(80.4 54.2) scale(.72)"  # above the TeroTalk line at y 157
 
-BUBBLE = "M40 138 H200 C211 138 218 145 218 156 V208 C218 219 211 226 200 226 H90 L60 248 L66 226 H40 C29 226 22 219 22 208 V156 C22 145 29 138 40 138 Z"
-LETTER = "M0 4 C0 1 1 0 4 0 H50 C53 0 54 1 54 4 V17 H50.5 C49.5 12.5 47 11 42 11 H34 V60 C34 64 36 65 41.5 65.5 V70 H12.5 V65.5 C18 65 20 64 20 60 V11 H12 C7 11 4.5 12.5 3.5 17 H0 Z"
+# The stamp that signs a line of text: a teacher's rubber stamp, our version. No ring at all, the
+# lettering itself draws the circle, the mascot stands in the middle and three sparks fill the
+# gaps. English, like the stamps a teacher actually owns, and pressed on at an angle.
+HEAD_SHAPES = BIRD_SHAPES[4:]
+STAMP_VIEWBOX = "0 0 200 200"
+STAMP_FACE = "translate(33 57) scale(1.15)"
+STAMP_TOP = "M22 100 A78 78 0 0 1 178 100"
+STAMP_BOT = "M12 100 A88 88 0 0 0 188 100"
+
+
+# The bubble is a stadium: radius 44 on an 88-tall box, so it has no corners to look square.
+BUBBLE = "M66 138 H174 A44 44 0 0 1 174 226 H128 L80 254 L98 226 H66 A44 44 0 0 1 66 138 Z"
+
+# The monogram is the wordmark's own letter: Fraunces italic 500, opsz 144, SOFT 100, WONK 1,
+# outlined from the font so no SVG depends on it. Font units, 2000 per em, baseline at y 0 and
+# y up, so LETTER_AT flips it and scales the 1511-unit cap to the 70 units the bubble gives it.
+LETTER = "M490 1418Q551 1418 616 1408Q682 1398 748 1383Q814 1368 875 1353Q936 1338 987 1328Q1038 1318 1073 1318Q1108 1318 1127 1332Q1146 1346 1155 1372Q1162 1390 1164 1402Q1165 1414 1168 1426Q1178 1466 1200 1488Q1222 1511 1266 1511Q1308 1511 1333 1481Q1358 1451 1356 1389Q1355 1296 1296 1240Q1237 1184 1134 1184Q1091 1184 1028 1196Q966 1207 894 1224Q823 1242 751 1258Q679 1275 616 1287Q552 1299 506 1299Q437 1299 408 1269Q379 1239 378 1187Q378 1175 380 1163Q383 1151 386 1138Q389 1124 389 1107Q388 1067 366 1040Q344 1012 297 1012Q246 1012 214 1046Q183 1081 184 1146Q186 1224 222 1286Q257 1347 324 1382Q392 1418 490 1418ZM611 203Q603 169 609 156Q615 143 634 135L693 120Q737 102 737 64Q737 32 716 16Q696 0 664 0H263Q231 0 217 16Q203 31 203 55Q204 81 218 98Q233 114 257 123L307 137Q339 146 354 166Q369 185 381 231Q392 267 411 336Q430 404 455 493Q480 582 508 682Q535 782 562 882Q590 983 615 1074Q640 1164 660 1235Q679 1306 690 1346L913 1304Q898 1251 876 1174Q855 1096 829 1003Q803 910 776 812Q749 713 723 618Q697 522 674 439Q652 356 636 294Q619 233 611 203Z"
+LETTER_SCALE = 70 / 1511
+LETTER_X = (61, 112)  # the pair centred on the bubble, at the font's own advance
+
+
+def letter_at(x):
+    return f'transform="translate({x} 218) scale({LETTER_SCALE:.5f} -{LETTER_SCALE:.5f})"'
+
 
 # Hex values per standalone file. The pages never see these: they use the tokens.
 PALETTES = {
@@ -63,6 +86,9 @@ PALETTES = {
              "bubble": "#F3ECE0", "letters": "#262940", "gap": "#262940"},
     "favicon": {"ink": "#F3ECE0", "wing": "#A9C4DE", "belly": "#262940", "beak": "#E0666D",
                 "bubble": "#F3ECE0", "letters": "#262940", "gap": "#2D3049"},
+    # The seal: the chibi's own colours on a sunken disc, so the eye stays light on a dark pupil.
+    "medal": {"ink": "#F3ECE0", "wing": "#A9C4DE", "belly": "#262940", "beak": "#E0666D",
+              "bubble": "#F3ECE0", "letters": "#262940", "gap": "#262940"},
 }
 
 
@@ -90,28 +116,83 @@ def mark(p=None):
     if p is None:
         bubble = f'<path class="logo__bubble" stroke-width="7" stroke-linejoin="round" d="{BUBBLE}"/>'
         letters = "".join(
-            f'<path class="logo__letters" transform="translate({x} 148)" d="{LETTER}"/>' for x in (56, 130))
+            f'<path class="logo__letters" {letter_at(x)} d="{LETTER}"/>' for x in LETTER_X)
     else:
         bubble = (f'<path fill="{p["bubble"]}" stroke="{p["gap"]}" stroke-width="7" '
                   f'stroke-linejoin="round" d="{BUBBLE}"/>')
         letters = "".join(
-            f'<path fill="{p["letters"]}" transform="translate({x} 148)" d="{LETTER}"/>' for x in (56, 130))
+            f'<path fill="{p["letters"]}" {letter_at(x)} d="{LETTER}"/>' for x in LETTER_X)
     return f'<g transform="{BIRD}">{bird}</g>{bubble}{letters}'
 
 
-def bird(p):
-    return "".join(with_attrs(el, paint(role, p)) for role, el in BIRD_SHAPES)
+def bird(p=None):
+    """The mascot without legs: classes when p is None, hex attributes otherwise."""
+    def attrs(role):
+        return f'class="logo__{role}"' if p is None else paint(role, p)
+
+    return "".join(with_attrs(el, attrs(role)) for role, el in BIRD_SHAPES)
 
 
-def standing(p):
+def standing(p=None):
     """The whole mascot on its feet, legs behind the body."""
-    legs = (f'<g fill="none" stroke="{p["beak"]}" stroke-width="3" stroke-linecap="round" '
-            f'stroke-linejoin="round">{LEGS}</g>')
+    if p is None:
+        legs = f'<g class="logo__legs">{LEGS}</g>'
+    else:
+        legs = (f'<g fill="none" stroke="{p["beak"]}" stroke-width="3" stroke-linecap="round" '
+                f'stroke-linejoin="round">{LEGS}</g>')
     return legs + bird(p)
 
 
 def symbol():
     return f'<symbol id="logo" viewBox="{VIEWBOX}">{mark()}</symbol>'
+
+
+# The stamp draws the head hollow, the way a rubber stamp prints: every shape a line and the
+# pupil the only fill. The hood, the cheek and the glint drop out: they are
+# markings that only read as fills.
+OUTLINE_SKIP = (3, 5, 8)
+OUTLINE_FILL = (7,)
+
+
+def outline(attrs, fill_attrs, width=5.5):
+    """The mascot's head as line art, in one ink."""
+    parts = []
+    for i, (role, el) in enumerate(HEAD_SHAPES):
+        if i in OUTLINE_SKIP:
+            continue
+        if i in OUTLINE_FILL:
+            parts.append(with_attrs(el, fill_attrs))
+        else:
+            parts.append(with_attrs(el, f'{attrs} stroke-width="{width}"'))
+    return "".join(parts)
+
+
+def seal(p=None, ids=("stamp-top", "stamp-bot")):
+    """The stamp: ring, curved lettering, the mascot standing, sparks. Classes or hex."""
+    top, bot = ids
+    if p is None:
+        ring = ""
+        text = 'class="logo__stamp-text"'
+    else:
+        ring = ""
+        text = (f'fill="{p["ink"]}" style="font-family:Figtree,system-ui,sans-serif;font-size:23px;'
+                f'font-weight:600;letter-spacing:1.4px"')
+    if p is None:
+        line = 'class="logo__stamp-line"'
+        solid = 'class="logo__stamp-solid"'
+    else:
+        line = f'fill="none" stroke="{p["ink"]}" stroke-linecap="round" stroke-linejoin="round"'
+        solid = f'fill="{p["ink"]}"'
+    defs = f'<defs><path id="{top}" d="{STAMP_TOP}"/><path id="{bot}" d="{STAMP_BOT}"/></defs>'
+    lettering = (f'<text {text}><textPath href="#{top}" startOffset="50%" style="text-anchor:middle">'
+                 f'TEROTALK SAYS</textPath></text>'
+                 f'<text {text}><textPath href="#{bot}" startOffset="50%" style="text-anchor:middle">'
+                 f'KEEP PUSHING!</textPath></text>')
+    return f'{defs}{ring}{lettering}<g transform="{STAMP_FACE}">{outline(line, solid)}</g>'
+
+
+def seal_symbol():
+    return f'<symbol id="tero-seal" viewBox="{STAMP_VIEWBOX}">{seal()}</symbol>'
 
 
 def write_files():
@@ -127,6 +208,9 @@ def write_files():
         html = path.read_text(encoding="utf-8")
         html, n = re.subn(r'<symbol id="logo".*?</symbol>', lambda _: symbol(), html, flags=re.S)
         assert n == 1, page
+        # The inline seal rides beside the logo in every sprite that already carries it.
+        html, n = re.subn(r'<symbol id="tero-seal".*?</symbol>', lambda _: seal_symbol(), html, flags=re.S)
+        assert n <= 1, page
         path.write_text(html, encoding="utf-8", newline="")
     sync_seals()
     sync_canvas()
@@ -162,6 +246,19 @@ def sync_canvas():
                       lambda m: m.group(1) + mark(PALETTES["favicon"]) + m.group(2), hero, flags=re.S)
     assert n == 1, "no mark found on the hero board"
     CANVAS_HERO.write_text(hero, encoding="utf-8", newline="")
+
+    # The statement on the section board signs with the mascot in the seal ring, on navy.
+    about = CANVAS_ABOUT.read_text(encoding="utf-8")
+    stamps = [0]
+
+    def restamp(m):
+        stamps[0] += 1
+        ids = (f"board-top-{stamps[0]}", f"board-bot-{stamps[0]}")
+        return m.group(1) + seal(PALETTES["medal"], ids) + "</svg>"
+
+    about, n = re.subn(r'(<svg viewBox="0 0 200 200"[^>]*>).*?</svg>', restamp, about, flags=re.S)
+    assert n, "no stamp found on the section board"
+    CANVAS_ABOUT.write_text(about, encoding="utf-8", newline="")
 
 
 CHROMES = [os.environ.get("CHROME", ""),
@@ -202,6 +299,7 @@ def export():
 if __name__ == "__main__":
     if "--symbol" in sys.argv:
         print(symbol())
+        print(seal_symbol())
     else:
         write_files()
         if "--export" in sys.argv:

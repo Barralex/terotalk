@@ -28,7 +28,10 @@
     font-size:17px;
     line-height:var(--leading-base);
     -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
+    /* clip, not hidden: hidden turns the body into a scroll container, and a scroll container
+       with nothing to scroll makes every CSS view() timeline inactive (the scroll-driven
+       statement in "Quién enseña" silently never runs). */
+    overflow-x:clip;
   }
 
   h1,h2,h3{
@@ -65,6 +68,9 @@
   section{padding:var(--space-24) 0}
 
   .band{background:var(--color-surface)}
+
+  /* One section that has to fit on a laptop screen in one piece. */
+  .section--tight{padding-block:var(--space-16)}
 
   .band--dark{
     --color-surface:var(--navy-900);
@@ -103,6 +109,7 @@
 
   @media (max-width:900px){
     section{padding:var(--space-18) 0}
+    .section--tight{padding-block:var(--space-14)}
     .duo,.split{grid-template-columns:1fr}
     .cards{grid-template-columns:1fr 1fr}
   }

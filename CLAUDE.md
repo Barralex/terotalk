@@ -32,18 +32,29 @@ regression, not a rebrand.
 
 | | **Teacher Flor** (`/kids/`) | **English at Work** (`/professionals/`) |
 |---|---|---|
-| Audience | Parents in Ciudad de la Costa | Working professionals across Latin America |
+| Audience | Parents in Ciudad de la Costa and eastern Montevideo | Working professionals across Latin America |
 | Service | In-home English lessons for kids | 6-hour one-to-one online program |
 | Delivery | Flor drives to the student's house | Video call |
 | Emotional hook | Relief — no more driving your kid around | Fear — freezing up in an English meeting |
-| Proof | Classroom experience (The British Schools, IB PYP/MYP) | Same credentials, reframed for business |
+| Proof | Classroom experience (bilingual school, IB PYP/MYP) | Same credentials, reframed for business |
 
-The home page (`/`) carries the shared brand and acts as a **splitter**: it
-establishes who Flor is, then sends each visitor down one of two paths. The
+The home page (`/`) carries the shared brand and the **vision**, and acts as a **splitter**.
+The vision lives in the hero and is said by the brand, not by Flor, and not in a section of
+its own: TeroTalk is not another English course, what blocks a person is one small and very
+concrete part of their English, and resolving it shows up in a meeting, an interview or how a
+kid walks into the classroom. Flor carries the rest of the page ("Sobre Flor" in the nav, the
+portrait and the credentials in "Quién enseña"), so the hero speaking as the brand is not the
+regression §1 warns about; a hero that hides her everywhere would be. Prices, objections and proof belong to the service page; the home never argues
+past those lines.
+
+The splitter then sends each visitor down one of two paths. The
 section is a sentence the visitor finishes — *Busco inglés para (mi hijo | mí)*, a segmented
 pill whose active option takes the colours of its strip — followed by one full-width strip per service: one headline,
-one line of facts, a scene, and an arrow in a ring instead of a button. No eyebrow, no sub-line: the
-question is the whole head, kept short. No cards, no bullet lists, no
+one line of facts, a scene, and a solid button. The eyebrow names the service the way the client
+says it out loud, *TeroTalk a domicilio* and *TeroTalk online*, with no 01 / 02 numbering. No
+eyebrow and no sub-line on the head above them: the
+question is the whole head, kept short, and it is sized between the two strip headlines
+(`clamp(2rem,3.8vw,2.9rem)`), never above them. No cards, no bullet lists, no
 pitch; the selling happens on the service page. A visitor
 should reach the right page in one click and never see the other offer's pricing or
 objections.
@@ -97,8 +108,10 @@ sitemap.xml                    Three URLs; bump lastmod when copy changes
 .github/workflows/deploy.yml   GitHub Pages deploy
 design/logo/build.py           Source of the mark: writes every logo SVG, the sprites, seals and canvas marks
 design/logo/banner.html        README banner layout (build.py --export renders it)
-design/canvas/project/         Source of the design canvas, one .dc.html per board
+design/canvas/project/         Source of the design canvas: canvas.json plus one .dc.html per board
 design/canvas/export.py        Renders the boards to PDF, SVG (Figma/Penpot) and PNG in design/canvas/export/
+design/preview/build.py        Writes assets/brand/preview.jpg from the live page
+design/preview/preview.html    Desktop and phone frames the README screenshot is shot from
 design/README.md               How the brand source and the canvas are kept
 ```
 
@@ -117,21 +130,40 @@ design/README.md               How the brand source and the canvas are kept
 - **Page theming via a body class.** `.t-kids` and `.t-pros` re-skin shared
   components per page. Add a theme override there rather than duplicating a component.
 - **Inline SVG sprite.** Icons live in a hidden `<svg>` symbol block at the top of
-  each page (`#logo`, `#knot`, `#arrow`, `#chat`; the home page adds `#flag-uy` and `#globe`) and are used via `<use href="#id">`. Add new
+  each page (`#logo`, `#knot`, `#arrow`, `#chat`; the home page adds `#flag-uy`, `#globe` and `#tero-seal`) and are used via `<use href="#id">`. Add new
   icons to the sprite; never paste a base64 image into the HTML (`check.py` fails the build).
+- **The home page carries one inline script**, the reveal above; the kids page carries the map.
+  Nothing else on the site runs JavaScript, and a new script needs a reason of the same size.
 - **Only two external runtime dependencies**, both from a CDN: Google Fonts in every
   `<head>`, and Leaflet 1.9.4 for the coverage map on the kids page. Adding a third
   needs a real justification.
 - **The mark is generated, never hand-edited.** The logo is the mascot: the same chibi tero as
-  `.chibi-tero`, nesting in the TT bubble. Its shapes and palettes live in `design/logo/build.py`,
-  which rewrites the `#logo` symbol in all three pages, `logo*.svg`, `favicon.svg`, both quality
-  seals and every mark on the canvas boards. Change it there and run the script; `--export`
+  `.chibi-tero`, nesting in the TT bubble. The bubble is a stadium (radius 44 on an 88-tall box):
+  it has no corners, which is what made the old one read as a square box. The monogram is the
+  wordmark's own letter, Fraunces italic 500 at `opsz 144`, `SOFT 100`, `WONK 1`, outlined from
+  the font into `LETTER` so no SVG depends on a webfont; changing the cut means re-extracting the
+  glyph with fontTools, not redrawing it. Its shapes and palettes live in `design/logo/build.py`,
+  which rewrites the `#logo` symbol in all three pages, the `#tero-seal` symbol wherever a page
+  carries it, `logo*.svg`, `favicon.svg`, both quality seals and every mark on the canvas boards. Change it there and run the script; `--export`
   also renders the PNGs and `banner.png`. The logo appears where the brand signs (header,
-  footer, the hero landing, the kids roof, the seam medallion); the full mascot with legs
-  appears only where it acts (`.chibi-tero`) and on the seals.
+  footer, the hero landing, the kids roof); the full mascot with legs appears only where it acts
+  (`.chibi-tero`), and on the quality seals. `#tero-seal` is the third form: a teacher's rubber
+  stamp in our palette. There is **no ring**: the lettering itself draws the circle, *TEROTALK
+  SAYS* over the top and *KEEP PUSHING!* under it, in English, because that is the language on
+  the stamps a teacher actually owns. The mascot's **head alone** sits in the middle, hollow, drawn as line art the
+  way a rubber stamp prints: the hood, the cheek and the glint drop out because they are markings
+  that only read as fills, and the pupil is the only fill left. That outline face exists nowhere
+  else on the site, which is the point: it is a different kind of drawing. No sparks, no ring, and the whole thing is pressed on at -30°, the way a hand lands a stamp. It keeps the
+  mascot's own colours, so the eye stays light over a dark pupil; flipping the ink for a light
+  disc inverts the eye and the face turns strange. It signs the statement at 1.9em, dropped with
+  `position:relative` into the gap between the last line and the stroke: pushing it down with
+  `vertical-align` only grows the line box, and the stroke moves away with it. At that size the
+  lettering is texture rather than words, which is what a stamp is.
 - **The design canvas lives in the repo.** `design/canvas/project/` is the source of the canvas
-  (https://claude.ai/artifact/4uaVm4QbSzWGwgbjSvYjDe). Edit the boards there, run
-  `python design/canvas/export.py` so the PDF, SVG and PNG exports match, publish the folder,
+  (https://claude.ai/artifact/4uaVm4QbSzWGwgbjSvYjDe). Edit the boards there, keep `canvas.json`
+  in step with them (a new board needs its frame, its title and its slot in `order`, and a name
+  in `NAMES` in `export.py`), run `python design/canvas/export.py` so the PDF, SVG and PNG exports
+  match, publish `project/` to that artifact,
   and commit all of it in the same change. A brand change that leaves the canvas behind is incomplete.
 - **Structured data.** The home page carries a `Person` JSON-LD block. Keep it in
   sync with the visible credentials.
@@ -203,7 +235,8 @@ linking it; as a plain link it silently won over the map styles.
 | `--hand` | **Caveat** (600) | Handwritten notes only — brand sub-line, hero margin notes, portrait caption. Never body copy |
 
 The wordmark is the one exception to weight 300: *Tero* in Fraunces 650 with `SOFT 100` and
-`WONK 1`, *Talk* in italic 500 in the logo red (`.brand__name`, `.brand__talk`). The
+`WONK 1`, *Talk* in italic 500 in the logo red (`.brand__name`, `.brand__talk`). The mark's TT is
+that same italic cut, outlined, so the monogram and the wordmark speak with one voice. The
 Google Fonts link loads Fraunces as a variable range with both axes for that reason.
 
 Base size 17px (16px under 640px), line-height 1.6, measure capped at 58–64ch.
@@ -211,6 +244,10 @@ Base size 17px (16px under 640px), line-height 1.6, measure capped at 58–64ch.
 ### Layout and motion
 
 - `--wrap: 1120px`, gutters via `.wrap`; sections `96px` vertical (72 / 60 at breakpoints).
+  `.section--tight` drops that to 64px: "Quién enseña" has to fit on one screen, so its padding is
+  the short one and its copy is three short paragraphs set larger than the body (1.25rem over a
+  52ch measure). Fewer words at a bigger size, not more words at the base size: that section is
+  read for pleasure or not at all.
 - `--r: 6px` — one radius everywhere except pills (`999px`).
 - Breakpoints: **900px** (grids collapse to one column) and **640px** (type and padding
   step down), plus a 420px tweak. Test every change at all three.
@@ -234,16 +271,19 @@ Base size 17px (16px under 640px), line-height 1.6, measure capped at 58–64ch.
   always active — on a thumb in its strip's colours, 10 % larger — and the other sits in grey.
   *mi hijo* is active at rest; hovering or focusing *mí* (or the work strip) slides the thumb
   across and turns it navy, and the matching strip sweeps. The picker drives the strips: the
-  active one scales its content to 105 % and the other goes grayscale at 55 % opacity. That
+  active one scales its content to 102 % and its headline to 110 % from the left edge, and the
+  other goes grayscale at 55 % opacity. The headline is what the eye catches, so it carries the
+  growth and the strip barely moves. That
   runs only under `(hover:hover)` — on touch nothing hovers and a grey strip reads as disabled.
-  The scenes sit in a 330px column (255px at 900px and 640px). The strips are tall (64px of
-  padding, 48 / 40 at the breakpoints) and the seam between them is a wave, not a rule: the work
+  The scenes sit in a 340px column (290px at 900px and 640px). The strips are tall (80px of
+  padding, 64 / 56 at the breakpoints) and the seam between them is a wave, not a rule: the work
   strip rides up by twice `--seam` (40px, 20px under 640px) and a CSS mask cuts its top edge to
-  the curve, so its background, sweep and grey state follow it. A sand medallion with the logo
-  (`.paths__medal`) sits where the wave crosses the old boundary, outside both strips' filters so
-  it never goes grey. The two mask layers overlap by 1px; butting them leaves a hairline. The ring arrow nudges forward
-  at 45 %, when the tero lands; on hover the ring fills with the accent and the arrow passes
-  through and comes back. The kids scene: Flor's car drives to the house (3–38 %) and the tero lands on the roof
+  the curve, so its background, sweep and grey state follow it. Nothing sits on the seam: the wave alone
+  joins the two strips, and a medallion over it was tried and dropped. The two mask layers overlap by 1px; butting them leaves a hairline. The call to action is a
+  `.btn--solid` in the strip's own colours (`.path__cta`), not a line of text: its arrow nudges
+  forward at 45 %, when the tero lands, and on hover the button turns accent and the arrow passes
+  through and comes back. The padding is 80px on the outer edge and 32px on the seam side, where
+  the wave already gives the strip its air. The kids scene: Flor's car drives to the house (3–38 %) and the tero lands on the roof
   at 42 %, with the hero's tero. The work scene: the call bubble says *Hi,* → *let me explain.* →
   *Deal.* in step with the hero's phrases while the voice bars grow. The CSS base state of every
   piece is the final frame, so reduced motion shows the car parked and *Deal.* on screen. The
@@ -254,6 +294,34 @@ Base size 17px (16px under 640px), line-height 1.6, measure capped at 58–64ch.
   content fades with an 8px drift, ~300 ms. Only same-origin navigations over http(s) animate —
   opening the files straight from disk shows none. Off under reduced motion; unsupported
   browsers simply navigate.
+- **The four facts** (`.fact` in the home's "Quién enseña", keyframes `fact-*`) are the one
+  animation the visitor triggers. They sit in one row, each under a 28px tick that widens to
+  56px and turns accent on hover, with no box and no panel: boxed, they read as a table of a CV,
+  and a full rule over each one is louder than the fact under it. Each carries a small scene in the site's line art:
+  the years drawing themselves to a dot, the tero flying into the classroom, the IB seal ticking,
+  the call speaking. They replay on `:hover` and on `:focus-within`, never on a loop, and the
+  CSS base state is the finished frame, so a fact that never gets hovered still reads and reduced
+  motion loses nothing. A new fact needs a scene; a fact without one is a table cell.
+- **The three roles** under them (`.timeline`) are three cards on a sheet, each under a hairline,
+  not rows of a table. The kind of place is the label, small and in brand caps; what Flor did there
+  is the content, in Fraunces italic. The work is what reads first, not the employer.
+- **The portrait is ornamented, not framed** (`.portrait__ornament` in `index.html`). The brand's
+  own thread orbits the photo and ends in the hero's spiral, with the accent bead at its tail, and
+  a tero feather falls out from under the circle, thin and at 45 % opacity. Both are `--color-brand`
+  line work: they accompany the face, they never compete with it. The ornament box is 138 % of the
+  photo and needs `max-width:none`, because the reset clamps every `svg` to its container and the
+  feather would hide behind the photo. The photo itself is 84 % of its column: the column is wide
+  so Flor carries weight, the picture is smaller so the ornament has room.
+- **The statement** (`.statement` in "Quién enseña") is the one line that is the brand, set as
+  type with room around it: no panel, no border, no box. It writes itself in left to right when
+  it reaches the screen, and a stroke draws under it half a second later. It is armed by the only
+  script on the home page, at the foot of the file: it sets `data-write="wait"` and flips it to
+  `"go"` on a plain scroll check, with a 6 s timer behind it. The seal lands at the end of the line one
+  second in, after the stroke. The hidden state is never in the
+  stylesheet alone, so a browser without JavaScript, or one asking for no motion, just shows the
+  line, and the timer means it can never stay invisible. Two other routes were tried and failed
+  here: a CSS `view()` timeline stays inactive on this page, and an `IntersectionObserver` never
+  delivers its callback in a throttled tab. One statement per page, short.
 - **The chibi tero** (`.chibi-tero`, next to the home CTAs) runs on the same 11 s clock as the
   hero: it hops forward (squash and stretch, `--chibi-step` per hop) while the thread untangles, and when the tero lands it
   swaps its folded wing for two raised ones and a bubble says *I did it!* — English on purpose,
@@ -279,9 +347,16 @@ brand material such as the quality seal.
 - Write the way Flor speaks: direct, warm, no institutional register, no exclamation marks.
 - Headings carry the idea; the italic `<em>` fragment carries the turn.
 - Name the customer's real problem before offering the service.
-- No invented claims. Credentials, years, and institutions must match §1 and the JSON-LD.
+- No invented claims. Credentials and years must match §1 and the JSON-LD.
+- **Never name the schools or the employers.** The copy says "un colegio bilingüe con programa
+  IB", never the institution. The credential is the programme, not the brand of the school, and
+  name-dropping reads as a CV. The same goes for the corporate client Flor taught for.
 - **TeroTalk is one word, two capitals.** Never "Tero Talk" or "Terotalk" in rendered copy;
   the all-lowercase form belongs to the domain and the repo slug only.
+- A term of the trade may link out once, with `.link`: an accent underline that only colours on
+  hover. The reference has to be **in Spanish and institutional** — the reader is in Uruguay and
+  an English Wikipedia entry reads as a footnote, not as proof. Today that is *enfoque por tareas*
+  on the home page, pointing at the Centro Virtual Cervantes.
 - Every CTA is a WhatsApp link with a **pre-filled, context-specific message** — the
   text differs per section so Flor knows what the person was reading.
 
@@ -364,11 +439,11 @@ A change is finished when all of the following are true:
 - [ ] Accessibility floor intact (§3).
 - [ ] `sitemap.xml` `lastmod` bumped if copy changed.
 - [ ] **`CLAUDE.md` updated if anything in §1–§5 or §7 moved.**
-- [ ] **README images match the live site.** If the home page changed visibly, regenerate
-      `assets/brand/preview.jpg` (1860×1050: the desktop page in a browser frame and the
-      phone beside it, animations frozen on the final frame). If the logo, wordmark or
-      tagline changed, run `python design/logo/build.py --export` for the banner and PNGs.
-      Same commit as the change.
+- [ ] **README images match the live site.** If the home page changed visibly, run
+      `python design/preview/build.py` for `assets/brand/preview.jpg` (1860×1050: the desktop
+      page in a browser frame and the phone on the splitter, both frozen late in the 11 s
+      loop). If the logo, wordmark or tagline changed, run `python design/logo/build.py
+      --export` for the banner and PNGs. Same commit as the change.
 - [ ] **Canvas in sync.** A brand change updates `design/canvas/` and is published to the canvas.
 - [ ] Commit message follows the convention.
 
@@ -382,13 +457,13 @@ Tracked here because they block the site being useful, not because they are bugs
 |---|---|---|
 | Flor's WhatsApp number | every `wa.me/` link on all three pages | **Blank — highest priority** |
 | Price of the English at Work program | `professionals/index.html`, `.amount.tbd` | Placeholder text |
-| Real coverage polygon | `kids/index.html`, `zona` array in the map script | Approximated by hand |
+| Real coverage polygon | `kids/index.html`, `area` array in the map script | Approximated by hand: a coastal band from El Pinar to Pocitos |
 | Real `og-cover.png` | `assets/brand/` | Placeholder |
 | Quality seal | `assets/brand/quality-seal.*` | Drawn, not placed. Its SVG text needs Fraunces and Figtree loaded; outline it before using it off-site |
 | Testimonials | all pages | None yet — do not invent any |
 | Photo of Flor teaching | `assets/` | Only the portrait exists; it stays home-page-only on purpose |
 | `terotalk.com` DNS | domain registrar | Not pointed at GitHub Pages; until it is, no `CNAME` file |
-| Real personal data in the copy | all pages, JSON-LD, `assets/flor-santos.jpg` | Name, portrait, LinkedIn, schools and zones are still live; they come out and become placeholders in their own commit |
+| Real personal data in the copy | all pages, JSON-LD, `assets/flor-santos.jpg` | Name, portrait, LinkedIn and zones are still live; they come out and become placeholders in their own commit. The schools are already anonymous (§4) |
 
 ---
 

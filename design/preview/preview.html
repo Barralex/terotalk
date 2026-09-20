@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TeroTalk README preview</title>
+<style>
+  :root{
+    --navy-900:#262940;
+    --page:#EFEFF3;
+    --desk-w:1000px; --desk-h:1010px;
+    --phone-w:446px; --phone-h:966px;
+  }
+  html,body{margin:0;width:1860px;height:1050px;background:var(--page);overflow:hidden;
+            font-family:"Figtree",system-ui,sans-serif}
+  .stage{position:relative;width:1860px;height:1050px}
+
+  /* Desktop: a browser frame cropped by the canvas, the page scaled to fit it. */
+  .desk{position:absolute;left:190px;top:40px;width:var(--desk-w);height:var(--desk-h);
+        border-radius:14px 14px 0 0;overflow:hidden;background:var(--navy-900);
+        box-shadow:0 40px 80px -30px rgba(38,41,64,.45)}
+  .desk__bar{display:flex;align-items:center;gap:10px;height:52px;padding:0 18px;background:#1F2137}
+  .desk__dot{width:11px;height:11px;border-radius:50%;background:#4A4E6D}
+  .desk__url{flex:1;margin-left:8px;height:26px;border-radius:13px;background:#2D3049;
+             display:grid;place-items:center;color:#D9D8E5;font-size:14px}
+  .desk__screen{position:relative;width:var(--desk-w);height:calc(var(--desk-h) - 52px);overflow:hidden}
+
+  /* Phone */
+  .phone{position:absolute;left:1222px;top:42px;width:var(--phone-w);height:var(--phone-h);
+         border-radius:58px;background:var(--navy-900);padding:12px;box-sizing:border-box;
+         box-shadow:0 40px 80px -30px rgba(38,41,64,.5)}
+  .phone__screen{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--navy-900)}
+  .phone__notch{position:absolute;left:50%;top:0;width:150px;height:26px;background:var(--navy-900);
+                border-radius:0 0 16px 16px;transform:translateX(-50%);z-index:2}
+
+  iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0}
+  #desk-frame{width:1440px;height:1382px;transform:scale(.6944)}
+  #phone-frame{width:390px;height:872px;transform:scale(1.08)}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="desk">
+    <div class="desk__bar">
+      <span class="desk__dot"></span><span class="desk__dot"></span><span class="desk__dot"></span>
+      <span class="desk__url">terotalk.com</span>
+    </div>
+    <div class="desk__screen"><iframe id="desk-frame" src="../../index.html"></iframe></div>
+  </div>
+  <div class="phone">
+    <div class="phone__notch"></div>
+    <div class="phone__screen"><iframe id="phone-frame" src="../../index.html"></iframe></div>
+  </div>
+</div>
+<script>
+  // The phone shows the splitter, the desktop the hero. Both frames are frozen on the
+  // final frame of the 11 s loop, the way reduced motion leaves them.
+  // Both frames are frozen late in the 11 s loop: the thread is drawn, the tero has landed,
+  // the car is parked. The phone is held on the splitter; the offset is re-measured on a
+  // timer because fonts and the hero art keep moving the page under it until they settle.
+  // The offset clears the sticky header so the question is not cut in half.
+  function settle(id, selector){
+    var f = document.getElementById(id);
+    f.addEventListener('load', function(){
+      var d = f.contentDocument;
+      function frame(){
+        d.getAnimations().forEach(function(a){ try{ a.currentTime = 9350; a.pause(); }catch(e){} });
+        if (selector) {
+          var t = d.querySelector(selector);
+          // Instant: the site scrolls smoothly, and a re-measured smooth scroll never lands.
+          f.contentWindow.scrollTo({top: t.getBoundingClientRect().top + f.contentWindow.scrollY - 100, behavior: 'instant'});
+        }
+      }
+      frame();
+      setInterval(frame, 100);
+    });
+  }
+  settle('desk-frame', null);
+  settle('phone-frame', '.paths__head');
+</script>
+</body>
+</html>

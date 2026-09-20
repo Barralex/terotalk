@@ -26,7 +26,7 @@ PROJECT = HERE / "project"
 OUT = HERE / "export"
 
 # Board files keep the names the canvas gave them; exports get English, descriptive ones.
-NAMES = {"Main.dc.html": "brand-sheet", "Mezcla.dc.html": "hero-thread"}
+NAMES = {"Main.dc.html": "brand-sheet", "Mezcla.dc.html": "hero-thread", "About.dc.html": "who-teaches"}
 
 # 6.6 s into the 11 s clock: the thread is untangled, "Deal." is up and the tero has landed.
 FREEZE_AT = "-6.6s"
