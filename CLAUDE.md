@@ -146,7 +146,8 @@ design/README.md               How the brand source and the canvas are kept
   which rewrites the `#logo` symbol in all three pages, the `#tero-seal` symbol wherever a page
   carries it, `logo*.svg`, `favicon.svg`, both quality seals and every mark on the canvas boards. Change it there and run the script; `--export`
   also renders the PNGs and `banner.png`. The logo appears where the brand signs (header,
-  footer, the hero landing, the kids roof); the full mascot with legs appears only where it acts
+  footer, the hero landing, the kids roof, and the closing CTA of every page, where the old knot
+  mark used to sit); the full mascot with legs appears only where it acts
   (`.chibi-tero`), and on the quality seals. `#tero-seal` is the third form: a teacher's rubber
   stamp in our palette. There is **no ring**: the lettering itself draws the circle, *TEROTALK
   SAYS* over the top and *KEEP PUSHING!* under it, in English, because that is the language on
@@ -165,6 +166,9 @@ design/README.md               How the brand source and the canvas are kept
   in `NAMES` in `export.py`), run `python design/canvas/export.py` so the PDF, SVG and PNG exports
   match, publish `project/` to that artifact,
   and commit all of it in the same change. A brand change that leaves the canvas behind is incomplete.
+- **The footer signs the build.** The base row of every footer reads `Hecho en la Costa por
+  Barral.dev`, linking out to the developer. It is the one line on the site that is not the
+  client’s voice, so it stays at the size and colour of the copyright beside it, never larger.
 - **Structured data.** The home page carries a `Person` JSON-LD block. Keep it in
   sync with the visible credentials.
 
@@ -302,6 +306,15 @@ Base size 17px (16px under 640px), line-height 1.6, measure capped at 58–64ch.
   the call speaking. They replay on `:hover` and on `:focus-within`, never on a loop, and the
   CSS base state is the finished frame, so a fact that never gets hovered still reads and reduced
   motion loses nothing. A new fact needs a scene; a fact without one is a table cell.
+- **"Por qué acá" is a contrast, not a table** (`.contrast` in `index.html`, keyframes
+  `contrast-*`). Three equal columns of prose read as a table of a brochure, so each argument is
+  one row: a scene on the left, the claim in Fraunces on the right. The drawing holds both states
+  at once, what the market sells faded to 24 % behind (`.contrast__was`) and what Flor does in full
+  ink, and the line under it names the faded half in words. The scenes are the anonymous listing
+  turning into a face with the brand thread and its spiral, twelve dots of a group turning into two
+  joined by the thread, and the struck unit 1 of a book turning into the bubble of a real meeting.
+  They replay on `:hover` and `:focus-within`, never on a loop, and the CSS base state is the
+  finished frame, like `.fact`. A row without a scene is a table cell again.
 - **The three roles** under them (`.timeline`) are three cards on a sheet, each under a hairline,
   not rows of a table. The kind of place is the label, small and in brand caps; what Flor did there
   is the content, in Fraunces italic. The work is what reads first, not the employer.

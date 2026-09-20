@@ -494,15 +494,47 @@
   .timeline{grid-template-columns:1fr;gap:var(--space-4)}
 }
 
-.why{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--color-border)}
-.why__item{padding:var(--space-8) var(--space-7) 0 0}
-.why__item+.why__item{padding-left:var(--space-7);border-left:1px solid var(--color-border)}
-.why__title{display:block;font-family:var(--font-serif);font-weight:300;font-size:var(--text-2xl);line-height:1.15}
-.why__text{margin-top:var(--space-3);color:var(--color-text-muted);font-size:var(--text-md)}
+/* "Por qué acá" sets what the market sells against what Flor does, one row per argument.
+   Three equal columns read as a table, so each row is a scene instead: the drawing holds both
+   states at once, what there is faded behind, what she does in full ink. It replays on hover
+   and on focus, never on a loop, and the CSS base state is the finished frame, so a row that
+   is never hovered still reads and reduced motion loses nothing. */
+.contrast{border-top:1px solid var(--color-border)}
+.contrast__row{
+  display:grid;
+  grid-template-columns:minmax(0,210px) minmax(0,1fr);
+  align-items:start;
+  gap:var(--space-12);
+  padding:var(--space-10) 0;
+}
+.contrast__row+.contrast__row{border-top:1px solid var(--color-border)}
+.contrast__art{display:block;width:100%;max-width:190px;height:auto;overflow:visible}
+.contrast__was-text{margin-top:var(--space-4);color:var(--color-text-muted);font-size:var(--text-sm)}
+.contrast__claim{padding-top:var(--space-2)}
+.contrast__title{display:block;font-family:var(--font-serif);font-weight:300;font-size:2.05rem;line-height:1.1;letter-spacing:var(--tracking-tight)}
+.contrast__text{margin-top:var(--space-4);max-width:56ch;color:var(--color-text-muted);font-size:var(--text-lg);line-height:1.55}
+
+.contrast__frame{fill:none;stroke:var(--color-text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.contrast__crowd{fill:var(--color-text)}
+.contrast__was{opacity:.24}
+.contrast__ink{fill:none;stroke:var(--color-brand);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.contrast__strike{fill:none;stroke:var(--color-accent);stroke-width:2.4;stroke-linecap:round}
+.contrast__bead{fill:var(--color-accent);transform-box:fill-box;transform-origin:50% 50%}
+
+.contrast__draw{stroke-dasharray:1;stroke-dashoffset:0}
+.contrast__row:hover .contrast__draw,.contrast__row:focus-within .contrast__draw{animation:contrast-draw .9s cubic-bezier(.4,0,.2,1) both}
+.contrast__row:hover .contrast__draw--late,.contrast__row:focus-within .contrast__draw--late{animation:contrast-draw .9s cubic-bezier(.4,0,.2,1) .35s both}
+.contrast__row:hover .contrast__was,.contrast__row:focus-within .contrast__was{animation:contrast-recede 1.2s ease both}
+.contrast__row:hover .contrast__bead,.contrast__row:focus-within .contrast__bead{animation:contrast-pop .8s cubic-bezier(.2,.8,.2,1) both}
+
+@keyframes contrast-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes contrast-recede{0%,28%{opacity:1}100%{opacity:.24}}
+@keyframes contrast-pop{0%,50%{opacity:0;transform:scale(.3)}75%{opacity:1;transform:scale(1.18)}100%{opacity:1;transform:none}}
 
 @media (max-width:900px){
-  .why{grid-template-columns:1fr}
-  .why__item,.why__item+.why__item{padding:var(--space-6) 0;border-left:0;border-bottom:1px solid var(--color-border)}
+  .contrast__row{grid-template-columns:1fr;gap:var(--space-5);padding:var(--space-8) 0}
+  .contrast__title{font-size:1.75rem}
+  .contrast__text{font-size:var(--text-md)}
 }
 
 .page-hero{padding:var(--space-20) 0 var(--space-24)}
@@ -697,8 +729,7 @@
 .faq__answer{padding:0 0 var(--space-6);color:var(--color-text-muted);max-width:64ch}
 
 .cta{text-align:center}
-.cta__thread{width:220px;margin:0 auto var(--space-6);color:var(--color-brand)}
-.cta__thread path{stroke-width:3}
+.cta__mark{width:92px;height:92px;margin:0 auto var(--space-5)}
 .cta__title{font-size:clamp(2.2rem,5vw,3.6rem);max-width:18ch;margin-inline:auto}
 .cta__text{margin:var(--space-5) auto 0;max-width:52ch;color:var(--color-text-muted)}
 .cta .actions{justify-content:center}
