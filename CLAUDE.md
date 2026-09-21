@@ -130,10 +130,14 @@ design/README.md               How the brand source and the canvas are kept
 - **Page theming via a body class.** `.t-kids` and `.t-pros` re-skin shared
   components per page. Add a theme override there rather than duplicating a component.
 - **Inline SVG sprite.** Icons live in a hidden `<svg>` symbol block at the top of
-  each page (`#logo`, `#knot`, `#arrow`, `#chat`; the home page adds `#flag-uy`, `#globe` and `#tero-seal`) and are used via `<use href="#id">`. Add new
+  each page (`#logo` and `#chat` everywhere; the home adds `#knot`, `#arrow`, `#flag-uy`, `#globe`
+  and `#tero-seal`, the kids page `#check`, `#flag-uy`, `#house` and `#tero-seal`, and the
+  professionals page `#knot` and `#check`) and are used via `<use href="#id">`. Add new
   icons to the sprite; never paste a base64 image into the HTML (`check.py` fails the build).
-- **The home page carries one inline script**, the reveal above; the kids page carries the map.
-  Nothing else on the site runs JavaScript, and a new script needs a reason of the same size.
+- **Two pages carry an inline reveal script**, the home and the kids page, both at the foot of the
+  file and both the same shape: a plain scroll check that plays something once when it reaches
+  the screen. The kids page also carries the map. Nothing else on the site runs JavaScript, and a
+  new script needs a reason of the same size.
 - **Only two external runtime dependencies**, both from a CDN: Google Fonts in every
   `<head>`, and Leaflet 1.9.4 for the coverage map on the kids page. Adding a third
   needs a real justification.
@@ -200,6 +204,7 @@ one line in `tokens.css`.
 | `--color-flag-*` | `--white`, `--uy-blue`, `--uy-sun` | The Uruguay flag icon only |
 | `--color-map-area` / `--color-map-base` | `--green-700` / `--red-600` | Coverage map only |
 | `--color-logo-*` | sand, `--blue-300`, `--red-300` `#E0666D` | The `#logo` symbol and the red *Talk* of the wordmark; `--color-logo-gap` is the ring that separates the bird from the bubble and must match the background |
+| `--color-stamp-ink` | `--color-logo-ink`, `--navy-900` on sand | The `#tero-seal` lettering and line art only. The seal is the one mark pressed on both surfaces, so its ink is a token of its own and `.band--soft` flips it; every other logo colour stays put |
 
 **The site is dark, broken by sand.** The base is `--navy-800`. `.band--soft` is the
 counterpoint: it rebinds every semantic token to the light set (`--sand-100` surface,
@@ -293,6 +298,31 @@ Base size 17px (16px under 640px), line-height 1.6, measure capped at 58–64ch.
   piece is the final frame, so reduced motion shows the car parked and *Deal.* on screen. The
   hover sweep on a strip is a `clip-path`, not `scaleX(0)`: a zero-scaled layer leaves a
   hairline at the strip edges in Chrome.
+- **The kids banner is the same box as the home hero, with its own scene.** `.home-hero` carries
+  the page: scene, eyebrow, title, place line, lead, the two CTAs and the chibi. What changes is
+  the drawing: the home's tangled thread is told once, on the home, and the kids page runs
+  `.ride--hero`, the splitter's own kids scene at banner size. Same 11 s clock, same `.ride`
+  block: Flor's car drives in and parks (3–38 %), the tero lands on the roof at 42 %, the window
+  lights up and a bubble from the house says *I can read it.* → *Easy!*, with *maneja ella* over
+  the road as the quiet Spanish layer. The travel distance is the token `--ride-travel` (104px on
+  the strip, 760px on the banner) so both instances share one set of keyframes. Under 640px the
+  banner takes a height of its own and `preserveAspectRatio="xMaxYMid slice"` crops it to the
+  arrival, because the full width would shrink the scene to a thread. The CSS base state is the
+  final frame, so reduced motion shows the car parked and the tero on the roof. A page whose
+  banner repeats the home's thread is the regression this bullet exists to prevent.
+- **A visit is a sequence, not a set of cards** (`.visit` on the kids page, keyframes `visit-*`).
+  Read, Talk and Do are three moments drawn in the site's line art: the book writes its lines and
+  says them aloud, two bubbles answer each other, the sheet ticks itself. They draw once when the
+  section arrives, staggered by `--lag` per stop, and again on `:hover` or `:focus-within`; the
+  reveal script lets the section go after that pass so the pointer can replay it. Never a loop:
+  the banner is the only thing that repeats on the page. CSS base state is the finished drawing.
+- **Situations are read, not scanned** (`.signs` on the kids page). "Si alguna de estas te suena"
+  is three situations set as type on the band, each opened by the accent bead and answered under
+  it in a quieter voice. No panel, no border, no numbering: on this site a `.card` grid is the
+  thing to replace, not to add. The tero's head looks in from the corner (`.signs__peek`), cut by
+  the section's own `overflow:hidden`, drawn with the `.chibi-tero` pieces so it keeps the
+  mascot's palette, blink and crest. That is the third mascot form on the site and it stays an
+  ornament: it never carries information.
 - **Page transitions** are native cross-document View Transitions (`@view-transition` in
   `site.css`), no JavaScript: the header is pinned (`view-transition-name:site-header`), the
   content fades with an 8px drift, ~300 ms. Only same-origin navigations over http(s) animate —
@@ -325,10 +355,13 @@ Base size 17px (16px under 640px), line-height 1.6, measure capped at 58–64ch.
   photo and needs `max-width:none`, because the reset clamps every `svg` to its container and the
   feather would hide behind the photo. The photo itself is 84 % of its column: the column is wide
   so Flor carries weight, the picture is smaller so the ornament has room.
-- **The statement** (`.statement` in "Quién enseña") is the one line that is the brand, set as
-  type with room around it: no panel, no border, no box. It writes itself in left to right when
-  it reaches the screen, and a stroke draws under it half a second later. It is armed by the only
-  script on the home page, at the foot of the file: it sets `data-write="wait"` and flips it to
+- **The statement** (`.statement` in "Quién enseña", and in "Quién va a tu casa" on the kids page,
+  where `.statement--large` makes it bigger than the heading above it and it closes the section) is
+  the one line that is the brand, set as
+  type with room around it: no panel, no border, no box. The brand says it, never Flor: her voice
+  is the prose around it. It writes itself in left to right when
+  it reaches the screen, and a stroke draws under it half a second later. It is armed by the reveal
+  script at the foot of the page: it sets `data-write="wait"` and flips it to
   `"go"` on a plain scroll check, with a 6 s timer behind it. The seal lands at the end of the line one
   second in, after the stroke. The hidden state is never in the
   stylesheet alone, so a browser without JavaScript, or one asking for no motion, just shows the
@@ -470,6 +503,7 @@ Tracked here because they block the site being useful, not because they are bugs
 |---|---|---|
 | Flor's WhatsApp number | every `wa.me/` link on all three pages | **Blank — highest priority** |
 | Price of the English at Work program | `professionals/index.html`, `.amount.tbd` | Placeholder text |
+| Price of the in-home lesson | `kids/index.html` | Taken off the page on purpose: no price block, no chip, no `offers` in the JSON-LD. It is quoted over WhatsApp until the client settles it |
 | Real coverage polygon | `kids/index.html`, `area` array in the map script | Approximated by hand: a coastal band from El Pinar to Pocitos |
 | Real `og-cover.png` | `assets/brand/` | Placeholder |
 | Quality seal | `assets/brand/quality-seal.*` | Drawn, not placed. Its SVG text needs Fraunces and Figtree loaded; outline it before using it off-site |

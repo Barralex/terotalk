@@ -28,9 +28,9 @@
 .logo__eye{fill:var(--color-logo-ink);stroke:var(--color-logo-beak);stroke-width:1.5}
 .logo__cheek{fill:var(--color-logo-beak);opacity:.5}
 .logo__legs{fill:none;stroke:var(--color-logo-beak);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.logo__stamp-text{fill:var(--color-logo-ink);font-family:var(--font-sans);font-size:23px;font-weight:600;letter-spacing:1.4px}
-.logo__stamp-line{fill:none;stroke:var(--color-logo-ink);stroke-linecap:round;stroke-linejoin:round}
-.logo__stamp-solid{fill:var(--color-logo-ink)}
+.logo__stamp-text{fill:var(--color-stamp-ink);font-family:var(--font-sans);font-size:23px;font-weight:600;letter-spacing:1.4px}
+.logo__stamp-line{fill:none;stroke:var(--color-stamp-ink);stroke-linecap:round;stroke-linejoin:round}
+.logo__stamp-solid{fill:var(--color-stamp-ink)}
 .brand__name{font-family:var(--font-serif);font-weight:650;font-size:var(--text-2xl);line-height:1;letter-spacing:-.03em;font-variation-settings:"SOFT" 100,"WONK" 1}
 .brand__talk{font-style:italic;font-weight:500;color:var(--color-logo-beak)}
 
@@ -75,7 +75,7 @@
 .home-hero__actions{align-items:center;margin-top:var(--space-8)}
 .home-hero__place-item{display:inline-flex;align-items:center;gap:var(--space-2);white-space:nowrap}
 .home-hero__flag{width:24px;height:16px;border-radius:2px;box-shadow:0 0 0 1px var(--color-border)}
-.home-hero__globe{width:18px;height:18px;color:var(--color-brand)}
+.home-hero__globe,.home-hero__place-icon{width:18px;height:18px;color:var(--color-brand)}
 .home-hero__sep{margin-inline:var(--space-2);color:var(--color-brand)}
 .flag-uy__field{fill:var(--color-flag-field)}
 .flag-uy__stripe{fill:var(--color-flag-stripe)}
@@ -304,23 +304,51 @@
 @keyframes path-nudge{0%,42%{transform:none}45%{transform:translateX(9px)}48%{transform:none}50%{transform:translateX(5px)}53%,100%{transform:none}}
 @keyframes path-through{0%{transform:none}45%{transform:translateX(56px)}46%{transform:translateX(-56px)}100%{transform:none}}
 
+/* The drive is the same scene twice, at two sizes: the strip on the home splitter and the banner
+   of the kids page. Only the distance changes, so it is a token and the keyframes read it. */
+.ride{--ride-travel:104px}
 .ride__road{fill:none;stroke:var(--color-text);stroke-width:2;stroke-linecap:round;stroke-dasharray:1 9;opacity:.5}
 .ride__house{fill:var(--color-surface-raised);stroke:var(--color-text);stroke-width:2;stroke-linejoin:round}
 .ride__roof{fill:none;stroke:var(--color-text);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
 .ride__door,.ride__body,.ride__wheel circle{fill:var(--color-text)}
 .ride__window,.ride__glass{fill:var(--color-surface)}
 .ride__wheel path{fill:none;stroke:var(--color-surface);stroke-width:1.6;stroke-linecap:round}
-.ride__car{transform:translateX(104px);animation:ride-drive 11s cubic-bezier(.45,0,.25,1) infinite}
+.ride__car{transform:translateX(var(--ride-travel));animation:ride-drive 11s cubic-bezier(.45,0,.25,1) infinite}
 .ride__wheel{transform-box:fill-box;transform-origin:50% 50%;animation:ride-spin 11s cubic-bezier(.45,0,.25,1) infinite}
 .ride__exhaust{opacity:0;animation:ride-exhaust 11s linear infinite}
 .ride__puff{fill:var(--color-text);transform-box:fill-box;transform-origin:50% 50%;animation:ride-puff .9s ease-out infinite}
 .ride__puff--late{animation-delay:-.45s}
 .ride__tero{transform-box:fill-box;transform-origin:50% 100%;animation:ride-tero 11s ease-out infinite}
-@keyframes ride-drive{0%{opacity:0;transform:translateX(0)}3%{opacity:1;transform:translateX(0)}38%,88%{opacity:1;transform:translateX(104px)}93%{opacity:0;transform:translateX(104px)}100%{opacity:0;transform:translateX(0)}}
+@keyframes ride-drive{0%{opacity:0;transform:translateX(0)}3%{opacity:1;transform:translateX(0)}38%,88%{opacity:1;transform:translateX(var(--ride-travel))}93%{opacity:0;transform:translateX(var(--ride-travel))}100%{opacity:0;transform:translateX(0)}}
 @keyframes ride-spin{0%,3%{transform:rotate(0)}38%,100%{transform:rotate(720deg)}}
 @keyframes ride-exhaust{0%,3%{opacity:0}6%,34%{opacity:1}39%,100%{opacity:0}}
 @keyframes ride-puff{from{opacity:.45;transform:translate(0,0) scale(.5)}to{opacity:0;transform:translate(-14px,-7px) scale(1.5)}}
 @keyframes ride-tero{0%,40%{opacity:0;transform:translateY(10px) scale(.4)}44%{opacity:1;transform:translateY(-4px) scale(1.08)}46%,88%{opacity:1;transform:none}92%,100%{opacity:0;transform:translateY(10px) scale(.4)}}
+
+/* The kids banner carries the same scene at banner size, and adds the beat the strip has no room
+   for: the window lights up, the kid inside says it out loud, and under the road the parent's
+   half of the promise. The hero's tangled thread stays on the home, told once. */
+.ride--hero{--ride-travel:760px;display:block;width:100%;height:auto;overflow:visible}
+.ride--hero .ride__road{stroke-width:3;stroke-dasharray:2 14}
+.ride--hero .ride__window{fill:var(--color-brand);animation:ride-lit 11s step-end infinite}
+.ride__say{transform-box:fill-box;transform-origin:70% 100%;animation:ride-say 11s cubic-bezier(.2,.8,.2,1) infinite}
+.ride__balloon{fill:var(--color-text)}
+.ride__line{font-family:var(--font-serif);font-style:italic;font-weight:300;font-size:30px;fill:var(--color-surface)}
+.ride__line--read{opacity:0;animation:ride-read 11s ease infinite}
+.ride__line--easy{animation:ride-easy 11s ease infinite}
+.ride__note{font-family:var(--font-serif);font-style:italic;font-weight:300;font-size:26px;fill:var(--color-text-muted);animation:ride-note 11s ease infinite}
+@keyframes ride-lit{0%,46%{fill:var(--color-surface)}48%,88%{fill:var(--color-brand)}92%,100%{fill:var(--color-surface)}}
+@keyframes ride-say{0%,48%{opacity:0;transform:scale(.6)}52%{opacity:1;transform:scale(1.06)}55%,88%{opacity:1;transform:none}92%,100%{opacity:0;transform:scale(.6)}}
+@keyframes ride-read{0%,52%{opacity:0}55%,68%{opacity:1}71%,100%{opacity:0}}
+@keyframes ride-easy{0%,71%{opacity:0}74%,88%{opacity:1}92%,100%{opacity:0}}
+@keyframes ride-note{0%,58%{opacity:0}62%,88%{opacity:1}92%,100%{opacity:0}}
+
+/* On a phone the full width would shrink the scene to a thread of 30px, so the banner keeps a
+   height of its own and the drawing is sliced from the right: the arrival, not the trip. */
+@media (max-width:640px){
+  .ride--hero{height:132px;overflow:hidden}
+  .ride__say,.ride__note{display:none}
+}
 
 .call__screen{fill:var(--color-surface-raised);stroke:var(--color-text-muted);stroke-width:2}
 .call__base{fill:var(--color-text-muted)}
@@ -362,6 +390,9 @@
 }
 
 .about{display:grid;grid-template-columns:minmax(300px,375px) 1fr;gap:var(--space-12);align-items:start}
+/* The kids page tells the same story without the portrait (the photo stays on the home page), so
+   the column stands alone, at the width of a section head. */
+.about--solo{grid-template-columns:minmax(0,760px)}
 .about__title{margin-top:var(--space-3);font-size:clamp(2rem,4.2vw,2.9rem)}
 .about__text{margin-top:var(--space-6);max-width:52ch;font-size:1.25rem;line-height:1.65}
 /* The one line that is the brand, set as a statement, not as a box: no panel, no border, just
@@ -378,6 +409,9 @@
   color:var(--color-text);
 }
 .statement em{font-style:italic;color:var(--color-accent)}
+/* Where the statement is the thing to be read on the section, not a line inside it: bigger than
+   the heading above, on a shorter measure, so it breaks into two lines and stops the eye. */
+.statement--large{max-width:17ch;font-size:clamp(2.3rem,4.2vw,3.4rem)}
 /* Relative, not a deeper vertical-align: pushing it down with the baseline grows the line box
    and the stroke moves with it, so the stamp never gets any closer to the line. */
 .statement__seal{position:relative;top:.48em;display:inline-block;width:1.9em;height:1.9em;margin-left:1.1em;vertical-align:-.42em;transform:rotate(-30deg);transform-origin:50% 50%}
@@ -570,6 +604,64 @@
 @media (max-width:900px){
   .page-hero__grid{grid-template-columns:1fr}
   .page-hero__note{max-width:320px}
+}
+
+/* A visit is a sequence, not a set of cards: three moments, each drawn in the site's line art.
+   They draw themselves once when the section arrives (armed by the script at the foot of the
+   page, which then lets go) and again on hover or focus. The CSS base state is the finished
+   drawing, so with no JavaScript, or with reduced motion, nothing is missing. */
+.visit__stops{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-10)}
+.visit__stop{--lag:0s}
+.visit__stop--b{--lag:.3s}
+.visit__stop--c{--lag:.6s}
+.visit__stop:hover,.visit__stop:focus-within{--lag:0s}
+.visit__art{display:block;width:100%;max-width:168px;height:auto;margin-bottom:var(--space-6);overflow:visible}
+.visit__word{display:block;font-family:var(--font-serif);font-weight:300;font-size:2.1rem;line-height:1;color:var(--color-accent)}
+.visit__title{margin-top:var(--space-3);font-family:var(--font-sans);font-weight:600;font-size:1.05rem;letter-spacing:0}
+.visit__text{margin-top:var(--space-2);font-size:var(--text-md);color:var(--color-text-muted)}
+.visit__ink{fill:none;stroke:var(--color-text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.visit__line{fill:none;stroke:var(--color-brand);stroke-width:2.5;stroke-linecap:round}
+.visit__tick{fill:none;stroke:var(--color-accent);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.visit__draw{stroke-dasharray:1;stroke-dashoffset:0}
+.visit__pop{transform-box:fill-box;transform-origin:50% 100%}
+.visit__d2{--d:.12s}
+.visit__d3{--d:.24s}
+.visit__d4{--d:.38s}
+.visit__d5{--d:.52s}
+.visit__stop:hover .visit__draw,.visit__stop:focus-within .visit__draw,.visit[data-play="go"] .visit__draw{animation:visit-draw .7s cubic-bezier(.4,0,.2,1) calc(var(--lag) + var(--d,0s)) both}
+.visit__stop:hover .visit__pop,.visit__stop:focus-within .visit__pop,.visit[data-play="go"] .visit__pop{animation:visit-pop .5s cubic-bezier(.2,.8,.2,1) calc(var(--lag) + var(--d,0s)) both}
+@keyframes visit-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes visit-pop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:none}}
+
+.visit__includes{display:flex;flex-wrap:wrap;gap:var(--space-4) var(--space-8);margin-top:var(--space-12);padding-top:var(--space-6);border-top:1px solid var(--color-border)}
+.visit__include{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--color-text-muted)}
+.visit__check{width:16px;height:16px;flex-shrink:0;color:var(--color-positive)}
+
+@media (max-width:900px){
+  .visit__stops{grid-template-columns:1fr 1fr;gap:var(--space-8)}
+}
+
+@media (max-width:640px){
+  .visit__stops{grid-template-columns:1fr;gap:var(--space-9)}
+  .visit__art{max-width:132px;margin-bottom:var(--space-4)}
+}
+
+/* "Si alguna de estas te suena" is read, not scanned: three situations set as type on the band,
+   each opened by the brand's bead, with the answer under it in a quieter voice. No panels, no
+   numbering. The tero looks in from the corner, cut by the edge of the section. */
+.signs{position:relative;overflow:hidden}
+.signs__list{display:grid;gap:var(--space-12);max-width:720px;padding-left:var(--space-8)}
+.signs__item{position:relative}
+.signs__item::before{content:"";position:absolute;left:calc(var(--space-8) * -1);top:.62em;width:8px;height:8px;border-radius:50%;background:var(--color-accent)}
+.signs__said{font-family:var(--font-serif);font-weight:300;font-size:clamp(1.5rem,2.8vw,2.1rem);line-height:1.25;letter-spacing:-.01em;color:var(--color-text)}
+.signs__said em{font-style:italic;color:var(--color-accent)}
+.signs__reply{margin-top:var(--space-3);max-width:56ch;color:var(--color-text-muted)}
+.signs__peek{position:absolute;right:9%;bottom:-38px;width:132px;height:auto}
+
+@media (max-width:640px){
+  .signs__list{gap:var(--space-9);padding-left:var(--space-6)}
+  .signs__item::before{left:calc(var(--space-6) * -1);width:6px;height:6px}
+  .signs__peek{right:6%;width:104px;bottom:-30px}
 }
 
 .card{padding:var(--space-8);border-radius:var(--radius);background:var(--color-surface-raised);border:1px solid var(--color-border)}

@@ -94,6 +94,7 @@
     --color-brand:var(--slate-600);
     --color-border:var(--sand-300);
     --color-positive:var(--green-700);
+    --color-stamp-ink:var(--navy-900);
     color:var(--color-text);
     background:var(--color-surface);
     border-block:1px solid var(--color-border);

@@ -46,6 +46,9 @@
   --color-logo-bubble:var(--sand-100);
   --color-logo-letters:var(--navy-900);
   --color-logo-gap:var(--color-surface);
+  /* The stamp is the one mark that gets pressed on a light surface too, so its ink is a token of
+     its own: sand over navy, navy over sand. Every other logo colour stays put. */
+  --color-stamp-ink:var(--color-logo-ink);
 
   --space-1:4px;
   --space-2:8px;
